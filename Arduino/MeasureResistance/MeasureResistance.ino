@@ -14,7 +14,7 @@ float VoltMax = 3.3;
 float VoltNow = 0;
 float VoltApplied = 5;
 
-int resA = 1000000;
+long resA = 1000000 * 9;
 int resB = 10000;
 
 int delay1 = 1500;
@@ -34,12 +34,12 @@ void setup() {
 
 void loop() {
   EnableA();
-  delay(100); 
-  ReadValue(resA);
+  delay(1500); 
+  ReadValue(resA, "sensor A");
   delay(delay1); 
   EnableB();
-  delay(100); 
-  ReadValue(resB);
+  delay(1500); 
+  ReadValue(resB, "sensor B");
   delay(delay1); 
 }
 
@@ -51,7 +51,8 @@ float VoltToOhm(float sensorVolt, float knownR){
   return knownR * sensorVolt / (VoltApplied - sensorVolt);
 }
 
-void ReadValue(int knownR){
+void ReadValue(int knownR, String sensor){
+  Serial.print(sensor + " -- ");
   sensorValue = analogRead(sensorPin);
   
   VoltNow = ConvertToVolt(sensorValue);
