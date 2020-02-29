@@ -2,7 +2,7 @@
 A simple wood moisture logger
 
 ## Hardware
-* Arduino Nano 33 IOT
+* Arduino Nano 33 IOT https://store.arduino.cc/arduino-nano-33-iot
 * TI Half-Bridge L293D
 * Resistors, ?x22M, ?x10M, ?x1M
 * Breadboard and wires
