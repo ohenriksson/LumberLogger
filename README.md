@@ -1,5 +1,13 @@
-# LumberLogger
+# LumberLogger(WIP)
 A simple wood moisture logger
+
+## Todo:
+* Decide on reistance series values
+* Decide on data structure
+* Decide on data logging period
+* Decide on box
+* Decide on power supply.
+* Build a soldered prototype.
 
 ## Hardware
 * Arduino Nano 33 IOT https://store.arduino.cc/arduino-nano-33-iot
