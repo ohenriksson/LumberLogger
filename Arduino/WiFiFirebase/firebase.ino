@@ -1,10 +1,13 @@
-#include "staticVars.h"
+#include "C:/staticVars.h"
 #include <Firebase_Arduino_WiFiNINA.h>
 
 FirebaseData firebaseData;
 int val = 0;
 
 void FirebaseSetup(){
+  delay(1000);
+  Serial.begin(115200);
+  Serial.println("Initiating...");
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, SSID1, PASS1);
   Firebase.reconnectWiFi(true);
 }
