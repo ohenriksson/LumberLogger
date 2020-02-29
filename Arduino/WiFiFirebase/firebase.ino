@@ -24,3 +24,19 @@ void FirebaseGet(){
     Serial.println(firebaseData.errorReason());
   }
 }
+
+void FirebaseSet(String data){
+
+  String jsonData = "{\"data\":\"" + data + "\"}";
+
+  if (Firebase.pushJSON(firebaseData, "/Moisture/Logs", jsonData)) {
+
+    Serial.println(firebaseData.dataPath());
+    Serial.println(firebaseData.pushName());
+    Serial.println(firebaseData.dataPath() + "/"+ firebaseData.pushName());
+  } 
+  else {
+    //Failed, then print out the error detail
+    Serial.println(firebaseData.errorReason());
+  }
+}
