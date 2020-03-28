@@ -1,21 +1,19 @@
 
 int led_pin = 13;
-int enableA = 7;
-int enableB = 6;
-
-int inputA = 3;
-int inputB = 2;
+int sensorPin = A0; //A0    // select the input pin for the potentiometer
+int enableA = A1; //A1
+int enableB = A2; //A2
 
 int sensorValue = 0;  // variable to store the value coming from the sensor
-int sensorPin = A0;    // select the input pin for the potentiometer
+
 
 float AnalogMax = 1024.0;
 float VoltMax = 3.3;
 float VoltNow = 0;
 float VoltApplied = 5;
 
-long resA = 1000000 * 9;
-int resB = 10000;
+double resA = 1000000 * 3.3; //3.3M
+double resB = 1000000 * 220; //220M
 
 int delay1 = 1500;
 
@@ -23,8 +21,6 @@ void setup() {
   pinMode(led_pin, OUTPUT);
   pinMode(enableA, OUTPUT);
   pinMode(enableB, OUTPUT);
-  pinMode(inputA, OUTPUT);
-  pinMode(inputB, OUTPUT);
   
   Serial.begin(9600);
   while (!Serial) {
@@ -34,11 +30,11 @@ void setup() {
 
 void loop() {
   EnableA();
-  delay(1500); 
+  delay(delay1); 
   ReadValue(resA, "sensor A");
   delay(delay1); 
   EnableB();
-  delay(1500); 
+  delay(delay1); 
   ReadValue(resB, "sensor B");
   delay(delay1); 
 }
@@ -63,17 +59,11 @@ void ReadValue(int knownR, String sensor){
 }
 
 void EnableA(){
-  digitalWrite(led_pin, HIGH);
-  digitalWrite(inputA, HIGH);
-  digitalWrite(inputB, LOW);
   digitalWrite(enableA, HIGH);
   digitalWrite(enableB, LOW);
 }
 
 void EnableB(){
-  digitalWrite(led_pin, LOW);
-  digitalWrite(inputA, LOW);
-  digitalWrite(inputB, HIGH);
   digitalWrite(enableA, LOW);
   digitalWrite(enableB, HIGH);
 }
