@@ -8,14 +8,15 @@ int sensorValue = 0;  // variable to store the value coming from the sensor
 
 
 float AnalogMax = 1024.0;
-float VoltMax = 3.3;
+float VoltMax = 3.30;
 float VoltNow = 0;
-float VoltApplied = 5;
+float VoltApplied = 3.28;
 
 double resA = 1000000 * 3.3; //3.3M
 double resB = 1000000 * 220; //220M
 
-int delay1 = 1500;
+int delay1 = 2000;
+int pauseDelay = 5000;
 
 void setup() {
   pinMode(led_pin, OUTPUT);
@@ -33,10 +34,15 @@ void loop() {
   delay(delay1); 
   ReadValue(resA, "sensor A");
   delay(delay1); 
+  DisableAll();
+  
+  delay(pauseDelay);
+
   EnableB();
   delay(delay1); 
   ReadValue(resB, "sensor B");
-  delay(delay1); 
+  delay(delay1);
+  DisableAll(); 
 }
 
 float ConvertToVolt(float analogValue){
@@ -60,6 +66,11 @@ void ReadValue(int knownR, String sensor){
 
 void EnableA(){
   digitalWrite(enableA, HIGH);
+  digitalWrite(enableB, LOW);
+}
+
+void DisableAll(){
+  digitalWrite(enableA, LOW);
   digitalWrite(enableB, LOW);
 }
 
