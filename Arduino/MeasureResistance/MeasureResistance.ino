@@ -4,18 +4,18 @@ int sensorPin = A0; //A0    // select the input pin for the potentiometer
 int enableA = A1; //A1
 int enableB = A2; //A2
 
-int sensorValue = 0;  // variable to store the value coming from the sensor
+int sensorValueA = 0;  // variable to store the value coming from the sensor
+int sensorValueB = 0;  // variable to store the value coming from the sensor
 
-
-float AnalogMax = 1024.0;
-float VoltMax = 3.30;
+float AnalogMax = 1024.000;
+float VoltMax = 3.300;
 float VoltNow = 0;
-float VoltApplied = 3.28;
+float VoltApplied = 3.300;
 
 double resA = 1000000 * 3.3; //3.3M
 double resB = 1000000 * 220; //220M
 
-int delay1 = 2000;
+int delay1 = 1000;
 int pauseDelay = 5000;
 
 void setup() {
@@ -30,19 +30,10 @@ void setup() {
 }
 
 void loop() {
-  EnableA();
-  delay(delay1); 
-  ReadValue(resA, "sensor A");
-  delay(delay1); 
-  DisableAll();
-  
+  ReadAndPrintValue(resA, "sensor A"); 
   delay(pauseDelay);
-
-  EnableB();
-  delay(delay1); 
-  ReadValue(resB, "sensor B");
-  delay(delay1);
-  DisableAll(); 
+  ReadAndPrintValue(resB, "sensor B");
+  delay(pauseDelay);
 }
 
 float ConvertToVolt(float analogValue){
@@ -50,18 +41,44 @@ float ConvertToVolt(float analogValue){
 }
 
 float VoltToOhm(float sensorVolt, float knownR){
+  if(VoltApplied-sensorVolt < 0.01) return 0; //error, prevent overflow
   return knownR * sensorVolt / (VoltApplied - sensorVolt);
 }
 
-void ReadValue(int knownR, String sensor){
+void ReadAndPrintValue(int knownR, String sensor){
+
   Serial.print(sensor + " -- ");
-  sensorValue = analogRead(sensorPin);
+  if(sensor == "sensor A")
+  {
+    ReadValueA();
+    VoltNow = ConvertToVolt(sensorValueA);
+  }
+  else if(sensor == "sensor B")
+  {
+    ReadValueB();
+    VoltNow = ConvertToVolt(sensorValueB);
+  } 
   
-  VoltNow = ConvertToVolt(sensorValue);
   Serial.print(VoltNow);
   Serial.print("V ");
   Serial.print(VoltToOhm(VoltNow, knownR));
-  Serial.print("Ohm --- \n ");
+  Serial.print("Ohm --- \n");
+}
+
+int ReadValueA(){
+  EnableA();
+  delay(delay1); 
+  sensorValueA = analogRead(sensorPin);
+  delay(delay1);
+  DisableAll(); 
+}
+
+int ReadValueB(){
+  EnableB();
+  delay(delay1); 
+  sensorValueB = analogRead(sensorPin);
+  delay(delay1); 
+  DisableAll();
 }
 
 void EnableA(){
