@@ -6,12 +6,12 @@ A simple wood moisture logger
 * Decide on data logging period
 * Decide on box
 * Decide on power supply.
-* Build a soldered prototype.
+* Sleep arduino between measurements.
 
 ## Hardware
 * Board: Arduino Nano 33 IOT https://store.arduino.cc/arduino-nano-33-iot
 * Half-Bridge: TI L293D
-* Resistors: 1x220M, 1x3.3M
+* Resistors: 10x22M, 1x3.3M
 * Probes: 2 Screws, 8x35mm
 * Misc: Case, breadboard and wires
 * Power: Usb 5.0v, ?A
