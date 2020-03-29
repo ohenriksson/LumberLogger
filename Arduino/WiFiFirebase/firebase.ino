@@ -27,7 +27,8 @@ void FirebaseGet(){
 
 void FirebaseSet(String data){
 
-  String jsonData = "{\"data\":\"" + data + "\"}";
+  String jsonData = "{\"data\":" + data + "}";
+  Serial.println("jsonData:" + jsonData);
 
   if (Firebase.pushJSON(firebaseData, "/Moisture/Logs", jsonData)) {
     Firebase.pushTimestamp(firebaseData, "/Moisture/Logs/" + firebaseData.pushName());
