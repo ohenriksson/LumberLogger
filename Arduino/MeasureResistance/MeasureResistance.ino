@@ -1,5 +1,13 @@
 
-class ResistanceCollector{
+class SensorEnum{
+ public:
+  static String sensorA;
+  static String sensorB;
+};
+String SensorEnum::sensorA = "sensor A";
+String SensorEnum::sensorB = "sensor B";
+
+class ResistanceCollector {
   private:
     const int led_pin = 13;
     const int sensorPin = A0; //A0    // select the input pin for the potentiometer
@@ -9,102 +17,106 @@ class ResistanceCollector{
     const float AnalogMax = 1024.000;
     const float VoltMax = 3.300;
     const float VoltApplied = 3.300;
-    
-    const int delay1 = 1000;
+
+    const int delay1 = 2000;
     const int pauseDelay = 5000;
 
     const double resA = 1000000 * 3.3; //3.3M
     const double resB = 1000000 * 220; //220M
-    
-  public:
-    float VoltNow = 0; // current sensor voltage
-    int sensorValueA = 0;  // variable to store the value coming from the sensor
-    int sensorValueB = 0;  // variable to store the value coming from the sensor
 
-    ResistanceCollector(){
-    }
     
-    void SetupPins(){
-      pinMode(led_pin, OUTPUT);
-      pinMode(enableA, OUTPUT);
-      pinMode(enableB, OUTPUT);
-      
-      Serial.begin(9600);
-      while (!Serial) {
-        ; // wait for serial port to connect. Needed for native USB port only
-      }
-    }
-
-    float ConvertToVolt(float analogValue){
-      return analogValue * (VoltMax / AnalogMax);
-    }
-    
-    float VoltToOhm(float sensorVolt, float knownR){
-      if(VoltApplied-sensorVolt < 0.01) return 0; //error, prevent overflow
-      return knownR * sensorVolt / (VoltApplied - sensorVolt);
-    }
-
-    int ReadValueA(){
-      EnableA();
-      delay(delay1); 
-      sensorValueA = analogRead(sensorPin);
-      delay(delay1);
-      DisableAll(); 
-    }
-    
-    int ReadValueB(){
-      EnableB();
-      delay(delay1); 
-      sensorValueB = analogRead(sensorPin);
-      delay(delay1); 
-      DisableAll();
-    }
-    
-    void EnableA(){
+    void EnableA() {
       digitalWrite(enableA, HIGH);
       digitalWrite(enableB, LOW);
     }
-    
-    void DisableAll(){
+
+    void DisableAll() {
       digitalWrite(enableA, LOW);
       digitalWrite(enableB, LOW);
     }
-    
-    void EnableB(){
+
+    void EnableB() {
       digitalWrite(enableA, LOW);
       digitalWrite(enableB, HIGH);
     }
 
-  
-    
-    void ReadAndPrintValue(int knownR, String sensor){
-      Serial.print(sensor + " -- ");
-      if(sensor == "sensor A")
-      {
-        ReadValueA();
-        VoltNow = ConvertToVolt(sensorValueA);
+  public:
+    bool Initiated = false;
+
+    ResistanceCollector() {
+    }
+
+    void SetupPins() {
+      pinMode(led_pin, OUTPUT);
+      pinMode(enableA, OUTPUT);
+      pinMode(enableB, OUTPUT);
+
+      Serial.begin(9600);
+      while (!Serial) {
+        ; // wait for serial port to connect. Needed for native USB port only
       }
-      else if(sensor == "sensor B")
+      Initiated = true;
+    }
+
+    float ConvertToVolt(float analogValue) {
+      return analogValue * (VoltMax / AnalogMax);
+    }
+
+    float VoltToOhm(float sensorVolt, float knownR) {
+      if (VoltApplied - sensorVolt < 0.1) return 0; //error, prevent overflow
+      return knownR * sensorVolt / (VoltApplied - sensorVolt);
+    }
+
+    int ReadValueA() {
+      EnableA();
+      delay(delay1);
+      float valueA = analogRead(sensorPin);
+      delay(delay1/2);
+      DisableAll();
+      return valueA;
+    }
+
+    int ReadValueB() {
+      EnableB();
+      delay(delay1);
+      float valueB = analogRead(sensorPin);
+      delay(delay1/2);
+      DisableAll();
+      return valueB;
+    }
+
+
+    float GetVoltageOver(String sensor) {
+      float volt = 0;
+      if (sensor == SensorEnum::sensorA)
       {
-        ReadValueB();
-        VoltNow = ConvertToVolt(sensorValueB);
-      } 
-      
-      Serial.print(VoltNow);
+        float valueA = ReadValueA();
+        volt = ConvertToVolt(valueA);
+      }
+      else if (sensor == SensorEnum::sensorB)
+      {
+        float valueB = ReadValueB();
+        volt = ConvertToVolt(valueB);
+      }
+      return volt;
+    }
+
+    void ReadAndPrintValue(int knownR, String sensor) {
+      Serial.print(sensor + " -- ");
+      float voltNow = GetVoltageOver(sensor);
+      Serial.print(voltNow);
       Serial.print("V ");
-      Serial.print(VoltToOhm(VoltNow, knownR));
+      Serial.print(VoltToOhm(voltNow, knownR));
       Serial.print("Ohm --- \n");
     }
 
-    void Loop(){
-      ReadAndPrintValue(resA, "sensor A"); 
+    void Loop() {
+      ReadAndPrintValue(resA, SensorEnum::sensorA);
       delay(pauseDelay);
-      ReadAndPrintValue(resB, "sensor B");
-      delay(pauseDelay); 
+      ReadAndPrintValue(resB, SensorEnum::sensorB);
+      delay(pauseDelay);
     }
 };
-
-
 
 
 ResistanceCollector coll1 = ResistanceCollector();
