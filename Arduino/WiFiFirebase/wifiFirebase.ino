@@ -1,8 +1,6 @@
 int status = WL_IDLE_STATUS;
 double readArray1[5];
-double sumAvg1[64];
 double readArray2[5];
-double spruceArray[] = {22400 , 5890,  2140,  830, 365, 165, 83,  44,  25.1,  15.5,  9.8, 6.3, 4.27,  3.02,  2.14,  1.58,  1.17,  0.91,  0.71}; //7 -> 25
 
 ResistanceCollector coll1 = ResistanceCollector(1);
  
@@ -14,9 +12,9 @@ void setup() {
 } 
 
 void loop(){
-
   averageOver64();
-  delay(1000 * 60);
+  
+  delay(1000 * 60 * 60);
 }
 
 void averageOver64(){

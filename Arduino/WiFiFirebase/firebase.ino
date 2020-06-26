@@ -32,9 +32,6 @@ void FirebaseSet(String data){
 
   if (Firebase.pushJSON(firebaseData, "/Moisture/Logs", jsonData)) {
     Firebase.pushTimestamp(firebaseData, "/Moisture/Logs/" + firebaseData.pushName());
-
-    Serial.println(firebaseData.dataPath());
-    Serial.println(firebaseData.pushName());
     Serial.println(firebaseData.dataPath() + "/"+ firebaseData.pushName());
   } 
   else {
