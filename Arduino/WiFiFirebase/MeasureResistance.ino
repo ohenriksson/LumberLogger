@@ -29,16 +29,15 @@ class VoltageReading{
 class ResistanceCollector {
   private:
     const int led_pin = 13;
-    const int sensorPin = A0; //A0    // select the input pin for the potentiometer
-    const int enableA = A1; //A1
-    const int enableB = A2; //A2
+    const int sensorPin = A0; 
+    const int enableA = A1; 
+    const int enableB = A2; 
 
-    const float AnalogMax = 1024.000;
-    const float VoltMax = 3.300;
-    const float VoltApplied = 3.300;
+    const double AnalogMax = 4096.000;
+    const double VoltMax = 3.300;
+    const double VoltApplied = 3.300;
 
-    const int delay1 = 2000;
-    const int pauseDelay = 5000;
+    int voltageToggleDelay = 1;
 
     const double resA = 1000000 * 3.3; //3.3M
     const double resB = 1000000 * 220; //220M
@@ -62,10 +61,12 @@ class ResistanceCollector {
   public:
     bool Initiated = false;
 
-    ResistanceCollector() {
+    ResistanceCollector(int delayToggle) {
+      voltageToggleDelay = delayToggle;
     }
 
     void SetupPins() {
+      analogReadResolution(12);
       pinMode(led_pin, OUTPUT);
       pinMode(enableA, OUTPUT);
       pinMode(enableB, OUTPUT);
@@ -77,8 +78,8 @@ class ResistanceCollector {
       Initiated = true;
     }
 
-    double ConvertToVolt(float analogValue) {
-      return analogValue * (VoltMax / AnalogMax);
+    double ConvertToVolt(double analogValue) {
+      return analogValue * (VoltMax / AnalogMax );
     }
 
     double VoltToOhm(double sensorVolt, double knownR) {
@@ -86,20 +87,20 @@ class ResistanceCollector {
       return knownR * sensorVolt / (VoltApplied - sensorVolt);
     }
 
-    float ReadValueA() {
+    double ReadValueA() {
       EnableA();
-      delay(delay1);
-      float valueA = analogRead(sensorPin);
-      delay(delay1/2);
+      delay(voltageToggleDelay);
+      double valueA = analogRead(sensorPin);
+      delay(voltageToggleDelay);
       DisableAll();
       return valueA;
     }
 
-    float ReadValueB() {
+    double ReadValueB() {
       EnableB();
-      delay(delay1);
-      float valueB = analogRead(sensorPin);
-      delay(delay1/2);
+      delay(voltageToggleDelay);
+      double valueB = analogRead(sensorPin);
+      delay(voltageToggleDelay);
       DisableAll();
       return valueB;
     }
@@ -115,16 +116,16 @@ class ResistanceCollector {
       }
     }
 
-    float GetVoltageOver(String sensor) {
-      float volt = 0;
+    double GetVoltageOver(String sensor) {
+      double volt = 0;
       if (sensor == SensorEnum::sensorA)
       {
-        float valueA = ReadValueA();
+        double valueA = ReadValueA();
         volt = ConvertToVolt(valueA);
       }
       else if (sensor == SensorEnum::sensorB)
       {
-        float valueB = ReadValueB();
+        double valueB = ReadValueB();
         volt = ConvertToVolt(valueB);
       }
       return volt;
@@ -132,25 +133,17 @@ class ResistanceCollector {
 
     VoltageReading ReadSensor(String sensor){
       double knownR = GetKnownResistanceFor(sensor);
-      float voltNow = GetVoltageOver(sensor);
+      double voltNow = GetVoltageOver(sensor);
       double unknownR = VoltToOhm(voltNow, knownR);
       return VoltageReading(voltNow, knownR, unknownR);
     }
 
     void ReadAndPrintValue(String sensor) {
-      Serial.print(sensor + " -- ");
-      float voltNow = GetVoltageOver(sensor);
+      double voltNow = GetVoltageOver(sensor);
       double knownR = GetKnownResistanceFor(sensor);
-      Serial.print(voltNow);
-      Serial.print("V ");
-      Serial.print(VoltToOhm(voltNow, knownR));
-      Serial.print("Ohm --- \n");
-    }
-
-    void Loop() {
-      ReadAndPrintValue(SensorEnum::sensorA);
-      delay(pauseDelay);
-      ReadAndPrintValue(SensorEnum::sensorB);
-      delay(pauseDelay);
+      //Serial.print(voltNow);
+      //Serial.print("V ");
+      //Serial.print(VoltToOhm(voltNow, knownR));
+      //Serial.print("Ohm --- \n");
     }
 };
