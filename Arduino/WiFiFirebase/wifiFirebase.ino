@@ -22,7 +22,7 @@ void averageOver64(){
   double avg2 = 0;
   String jsonRead = "";
   
-  for(int i=0; i < 64; i+=10){
+  for(int i=0; i < 64; i++){
       double sum = 0;
       double sum2 = 0;
     doNMeasurements(5);
@@ -39,7 +39,6 @@ void averageOver64(){
   Serial.print(" ");
   Serial.print(avg2);
   Serial.print("\n");
-
   
   jsonRead = "{\"R1\":" + String(avg, DEC) + "," + "\"R2\":" + String(avg2, DEC) + "}";
   FirebaseSet(jsonRead);

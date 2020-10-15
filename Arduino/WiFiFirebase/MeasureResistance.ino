@@ -72,9 +72,6 @@ class ResistanceCollector {
       pinMode(enableB, OUTPUT);
 
       Serial.begin(9600);
-      while (!Serial) {
-        ; // wait for serial port to connect. Needed for native USB port only
-      }
       Initiated = true;
     }
 
@@ -141,9 +138,5 @@ class ResistanceCollector {
     void ReadAndPrintValue(String sensor) {
       double voltNow = GetVoltageOver(sensor);
       double knownR = GetKnownResistanceFor(sensor);
-      //Serial.print(voltNow);
-      //Serial.print("V ");
-      //Serial.print(VoltToOhm(voltNow, knownR));
-      //Serial.print("Ohm --- \n");
     }
 };
