@@ -25,11 +25,11 @@ void averageOver64(){
   for(int i=0; i < 64; i++){
       double sum = 0;
       double sum2 = 0;
-    doNMeasurements(5);
+     doNMeasurements(5);
      for(int j=0; j<5; j++){
        sum += readArray1[j] / 5.0;
        sum2 += readArray2[j] / 5.0;
-    }
+     }
     avg += sum/64;
     avg2 += sum2/64;
   }

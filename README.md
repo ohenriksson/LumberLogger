@@ -1,11 +1,13 @@
 # LumberLogger(WIP)
 A simple wood moisture logger
 
+## Get started:
+* Put in your personal credentials in `Arduino/WiFiFirebase/staticVars.h`
+* Open `Arduino/WiFiFirebase/wifiFirebase.ino` in the arduino IDE
+* Connect and write to the board
+
+
 ## Todo:
-* Decide on data structure
-* Decide on data logging period
-* Decide on box
-* Decide on power supply.
 * Sleep arduino between measurements.
 
 ## Hardware
