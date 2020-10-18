@@ -2,7 +2,7 @@
 A simple wood moisture logger
 
 ## Get started:
-* Put in your personal credentials in `Arduino/WiFiFirebase/staticVars.h`
+* Put in your personal credentials in `Arduino/WiFiFirebase/staticVars.h` and copy it to `C:/staticVars.h` (you can change the location in `firebase.ino`).
 * Open `Arduino/WiFiFirebase/wifiFirebase.ino` in the arduino IDE
 * Connect and write to the board
 
