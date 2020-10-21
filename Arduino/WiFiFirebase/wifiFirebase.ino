@@ -23,13 +23,20 @@ void averageOver64(){
   String jsonRead = "";
   
   for(int i=0; i < 64; i++){
-      double sum = 0;
-      double sum2 = 0;
-     doNMeasurements(5);
-     for(int j=0; j<5; j++){
-       sum += readArray1[j] / 5.0;
-       sum2 += readArray2[j] / 5.0;
-     }
+    double sum = 0;
+    double sum2 = 0;
+    doNMeasurements(5);
+    for(int j=0; j<5; j++){
+      
+      sum += readArray1[j] / 5.0;
+      sum2 += readArray2[j] / 5.0;
+      if(readArray1[j] == 0){
+        sum = 0; //make sure we set it to 0 if any single value is zero (out of bounds anyways)
+      }
+      if(readArray2[j] == 0){
+        sum2 = 0; //make sure we set it to 0 if any single value is zero (out of bounds anyways)
+      }
+    }
     avg += sum/64;
     avg2 += sum2/64;
   }
