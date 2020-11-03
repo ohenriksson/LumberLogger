@@ -1,6 +1,7 @@
 int status = WL_IDLE_STATUS;
-double readArray1[5];
-double readArray2[5];
+int nReads = 10;
+double readArray1[nReads];
+double readArray2[nReads];
 
 ResistanceCollector coll1 = ResistanceCollector(1);
  
@@ -18,36 +19,23 @@ void loop(){
 }
 
 void averageOver64(){
-  double avg = 0;
-  double avg2 = 0;
+  string r1Array = "";
+  string r2Array = "";
   String jsonRead = "";
   
-  for(int i=0; i < 64; i++){
-    double sum = 0;
-    double sum2 = 0;
-    doNMeasurements(5);
-    for(int j=0; j<5; j++){
-      
-      sum += readArray1[j] / 5.0;
-      sum2 += readArray2[j] / 5.0;
-      if(readArray1[j] == 0){
-        sum = 0; //make sure we set it to 0 if any single value is zero (out of bounds anyways)
-      }
-      if(readArray2[j] == 0){
-        sum2 = 0; //make sure we set it to 0 if any single value is zero (out of bounds anyways)
-      }
+  doNMeasurements(nReads);
+
+  for(int j=0; j<nReads; j++){
+    r1Array += "\"" + String(readArray1[j], DEC) + "\"";
+    r2Array += "\"" + String(readArray2[j], DEC) + "\"";
+
+    if(j-1 < nReads){
+      r1Array += ",";
+      r2Array += ",";
     }
-    avg += sum/64;
-    avg2 += sum2/64;
   }
-
-
-  Serial.print(avg);
-  Serial.print(" ");
-  Serial.print(avg2);
-  Serial.print("\n");
   
-  jsonRead = "{\"R1\":" + String(avg, DEC) + "," + "\"R2\":" + String(avg2, DEC) + "}";
+  jsonRead = "{\"R1\":[" + r1Array  + "]," + "\"R2\":[" + r2Array + "]}";
   FirebaseSet(jsonRead);
 }
 
