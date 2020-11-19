@@ -1,7 +1,7 @@
 #ifndef VoltageReading_h
 #define VoltageReading_h
 
-#include "Arduino.h"
+#include "Arduino.h" 
 
 class VoltageReading
 {
