@@ -1,5 +1,10 @@
-#include "Arduino.h"
 #include "VoltageReading.h"
+#include "Arduino.h"
+
+VoltageReading::VoltageReading() : VoltageReading(0,0,0)
+{
+  
+}
 
 VoltageReading::VoltageReading(double volt, double kR, double uR){
       voltage = volt;

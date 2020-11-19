@@ -1,5 +1,9 @@
+#include "FirebaseCruncher.h"
 #include "C:/staticVars.h"
+
+#include "Arduino.h"
 #include <Firebase_Arduino_WiFiNINA.h>
+
 
 FirebaseData firebaseData;
 int val = 0;

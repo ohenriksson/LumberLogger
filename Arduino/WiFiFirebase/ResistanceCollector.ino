@@ -1,5 +1,6 @@
 #include "VoltageReading.h"
 #include "SensorEnum.h"
+#include "Arduino.h"
 
 class ResistanceCollector {
   private:
