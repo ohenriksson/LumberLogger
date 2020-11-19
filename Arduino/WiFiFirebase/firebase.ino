@@ -6,7 +6,7 @@ int val = 0;
 
 void FirebaseSetup(){
   delay(1000);
-  Serial.begin(9600);
+  //Serial.begin(9600);
   Serial.println("Initiating...");
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH, SSID1, PASS1);
   Firebase.reconnectWiFi(true);

@@ -1,30 +1,5 @@
-
-class SensorEnum{
- public:
-  static String sensorA;
-  static String sensorB;
-};
-String SensorEnum::sensorA = "sensor A";
-String SensorEnum::sensorB = "sensor B";
-
-class VoltageReading{
-  public:
-    double voltage;
-    double knownR;
-    double unkownR;
-
-    VoltageReading(double volt, double kR, double uR){
-      voltage = volt;
-      knownR = kR;
-      unkownR = uR;
-    }
-
-    String ToJSON(){
-      return "{\"volt\":" + String(voltage, DEC) + ","
-        + "\"knownR\":" + String(knownR, DEC) + ","
-        + "\"unkownR\":" + String(unkownR, DEC) + "}";
-    }
-};
+#include "VoltageReading.h"
+#include "SensorEnum.h"
 
 class ResistanceCollector {
   private:
@@ -37,7 +12,7 @@ class ResistanceCollector {
     const double VoltMax = 3.300;
     const double VoltApplied = 3.300;
 
-    int voltageToggleDelay = 1;
+    int voltageToggleDelay;
 
     const double resA = 1000000 * 3.3; //3.3M
     const double resB = 1000000 * 220; //220M
@@ -72,15 +47,18 @@ class ResistanceCollector {
       pinMode(enableB, OUTPUT);
 
       Serial.begin(9600);
+      //while (!Serial) {
+        //; // wait for serial port to connect. Needed for native USB port only
+      //}
       Initiated = true;
     }
 
     double ConvertToVolt(double analogValue) {
-      return analogValue * (VoltMax / AnalogMax );
+      return analogValue / AnalogMax * VoltMax;
     }
 
     double VoltToOhm(double sensorVolt, double knownR) {
-      if (VoltApplied - sensorVolt < 0.1) return 0; //error, prevent overflow
+      if (VoltApplied - sensorVolt < 0.3) return 0; //error, prevent overflow
       return knownR * sensorVolt / (VoltApplied - sensorVolt);
     }
 
@@ -125,6 +103,7 @@ class ResistanceCollector {
         double valueB = ReadValueB();
         volt = ConvertToVolt(valueB);
       }
+
       return volt;
     }
 
@@ -133,6 +112,25 @@ class ResistanceCollector {
       double voltNow = GetVoltageOver(sensor);
       double unknownR = VoltToOhm(voltNow, knownR);
       return VoltageReading(voltNow, knownR, unknownR);
+    }
+
+    void ReadSensorNTimes(VoltageReading readings[], String sensor, int nTimes){
+
+      if(sensor == SensorEnum::sensorA){
+        EnableA();
+      }else{
+        EnableB();
+      }
+      
+      for(int x=0; x<nTimes; x++){
+        delay(voltageToggleDelay);
+        double voltNow = analogRead(sensorPin);
+        double knownR = GetKnownResistanceFor(sensor);
+        double unknownR = VoltToOhm(voltNow, knownR);
+        readings[x] = VoltageReading(voltNow, knownR, unknownR);
+      }
+      DisableAll();
+      
     }
 
     void ReadAndPrintValue(String sensor) {
