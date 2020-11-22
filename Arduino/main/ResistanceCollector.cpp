@@ -1,24 +1,23 @@
+#include "Arduino.h"
 #include "VoltageReading.h"
 #include "SensorEnum.h"
-#include "Arduino.h"
 
 class ResistanceCollector {
   private:
-    const int led_pin = 13;
-    const int sensorPin = A0; 
-    const int enableA = A1; 
-    const int enableB = A2; 
+    static const int led_pin = 13;
+    static const int sensorPin = A0; 
+    static const int enableA = A1; 
+    static const int enableB = A2; 
 
     const double AnalogMax = 4096.000;
     const double VoltMax = 3.300;
     const double VoltApplied = 3.300;
 
-    int voltageToggleDelay;
-
     const double resA = 1000000 * 3.3; //3.3M
     const double resB = 1000000 * 220; //220M
 
-    
+    int voltageToggleDelay;
+
     void EnableA() {
       digitalWrite(enableA, HIGH);
       digitalWrite(enableB, LOW);
@@ -35,7 +34,9 @@ class ResistanceCollector {
     }
 
   public:
-    bool Initiated = false;
+    bool Initiated;
+
+    ResistanceCollector(){}
 
     ResistanceCollector(int delayToggle) {
       voltageToggleDelay = delayToggle;
@@ -115,7 +116,7 @@ class ResistanceCollector {
       return VoltageReading(voltNow, knownR, unknownR);
     }
 
-    void ReadSensorNTimes(VoltageReading readings[], String sensor, int nTimes){
+    void ReadSensorNTimes(VoltageReading *readings, String sensor, int nTimes){
 
       if(sensor == SensorEnum::sensorA){
         EnableA();

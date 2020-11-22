@@ -9,5 +9,4 @@ class SensorEnum{
   static String sensorB;
 };
 
-
 #endif

@@ -2,7 +2,6 @@
 
 VoltageReading::VoltageReading() : VoltageReading(0,0,0)
 {
-
 }
 
 VoltageReading::VoltageReading(double volt, double kR, double uR){
