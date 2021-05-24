@@ -17,6 +17,7 @@ A simple wood moisture logger
 * Probes: 2 Screws, 8x35mm
 * Misc: Case, breadboard and wires
 * Power: Usb 5.0v, ?A
+* Diodes: 1N4001 x 2
 
 
 ## Firebase Arduino WiFi101

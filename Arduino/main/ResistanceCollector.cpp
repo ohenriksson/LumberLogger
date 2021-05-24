@@ -9,6 +9,7 @@ class ResistanceCollector {
     static const int enableA = A1; 
     static const int enableB = A2; 
 
+    const double DiodeVoltage = 0.7;
     const double AnalogMax = 4096.000;
     const double VoltMax = 3.300;
     const double VoltApplied = 3.300;
@@ -59,9 +60,9 @@ class ResistanceCollector {
       return analogValue / AnalogMax * VoltMax;
     }
 
-    double VoltToOhm(double sensorVolt, double knownR) {
-      if (VoltApplied - sensorVolt < 0.3) return 0; //error, prevent overflow
-      return knownR * sensorVolt / (VoltApplied - sensorVolt);
+    double VoltToOhm(double sensorVolt, double knownR) { //R2 = R1 * u2/(Utot-u2-d1)
+      if (VoltApplied - sensorVolt - DiodeVoltage < 0.3) return 0; //error, prevent overflow
+      return knownR * sensorVolt / (VoltApplied - sensorVolt - DiodeVoltage);
     }
 
     double ReadValueA() {
