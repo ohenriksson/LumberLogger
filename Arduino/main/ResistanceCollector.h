@@ -27,9 +27,7 @@ class ResistanceCollector {
     bool Initiated;
 
   public:
-    void EnableA();
     void DisableAll();
-    void EnableB();
 
     ResistanceCollector();
     ResistanceCollector(int delayToggle);     

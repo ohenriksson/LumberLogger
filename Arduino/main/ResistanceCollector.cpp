@@ -5,7 +5,9 @@
 
 typedef arduino::String String;
 
-    ResistanceCollector :: ResistanceCollector(){}
+    ResistanceCollector :: ResistanceCollector() : ResistanceCollector(100)
+    {
+    }
 
     ResistanceCollector :: ResistanceCollector(int delayToggle) {
       voltageToggleDelay = delayToggle;
@@ -29,6 +31,11 @@ typedef arduino::String String;
       Initiated = true;
     }
 
+    void ResistanceCollector :: DisableAll(){
+      digitalWrite(enableA,LOW);
+      digitalWrite(enableB,LOW);
+    }
+
     double ResistanceCollector :: ConvertToVolt(double analogValue) {
       return analogValue / AnalogMax * VoltMax;
     }
@@ -39,7 +46,7 @@ typedef arduino::String String;
     }
 
     double ResistanceCollector :: ReadValueA() {
-      EnableA();
+      digitalWrite(enableA, HIGH);
       delay(voltageToggleDelay);
       double valueA = analogRead(sensorPin);
       delay(voltageToggleDelay);
@@ -48,7 +55,7 @@ typedef arduino::String String;
     }
 
     double ResistanceCollector :: ReadValueB() {
-      EnableB();
+      digitalWrite(enableB, HIGH);
       delay(voltageToggleDelay);
       double valueB = analogRead(sensorPin);
       delay(voltageToggleDelay);
@@ -95,12 +102,12 @@ typedef arduino::String String;
         if(DEVMODE){
           Serial.print("Reading A");
         }
-        EnableA();
+        digitalWrite(enableA,HIGH);
       }else{
         if(DEVMODE){
           Serial.print("Reading B");
         }
-        EnableB();
+        digitalWrite(enableB,HIGH);
       }
       
       for(int x=0; x<nTimes; x++){

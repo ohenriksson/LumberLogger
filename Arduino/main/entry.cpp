@@ -5,16 +5,17 @@
 #include "FirebaseCruncher.h"
 #include "ResistanceCollector.h"
 
+ResistanceCollector* coll1 = new ResistanceCollector(10000);
+
 void setup() { 
-  ResistanceCollector* coll1 = new ResistanceCollector(10000);
-  // coll1->SetupPins();
+  coll1->SetupPins();
   Serial.println("Resistance setup complete");
   FirebaseSetup();
   Serial.println("Setup complete");
 } 
 
 void loop(){
-  // ExecuteReadingsAndPublish(coll1);
-  // delay(1000 * 30);
+  ExecuteReadingsAndPublish(coll1);
+  delay(1000 * 30);
 }
 
