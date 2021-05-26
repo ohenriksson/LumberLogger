@@ -1,8 +1,8 @@
 #include "FirebaseCruncher.h"
 #include "C:/staticVars.h"
+#include "Firebase_Arduino_WiFiNINA.h"
 
-#include <Firebase_Arduino_WiFiNINA.h>
-
+using namespace std;
 
 FirebaseData firebaseData;
 int val = 0;
@@ -29,9 +29,9 @@ void FirebaseGet(){
 }
 
 void FirebaseSet(String data){
-
   String jsonData = "{\"data\":" + data + "}";
-  Serial.println("jsonData:" + jsonData);
+  Serial.print("jsonData:");
+  Serial.println(jsonData);
 
   if (Firebase.pushJSON(firebaseData, "/Moisture/Logs", jsonData)) {
     Firebase.pushTimestamp(firebaseData, "/Moisture/Logs/" + firebaseData.pushName());

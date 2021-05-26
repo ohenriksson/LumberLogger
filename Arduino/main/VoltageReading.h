@@ -2,15 +2,16 @@
 #define VoltageReading_h
 
 #include "Arduino.h" 
+typedef arduino::String String;
 
 class VoltageReading
 {
   public:
-    VoltageReading();
-    VoltageReading(double volt, double kR, double uR);
     double voltage;
     double knownR;
     double unkownR;
+    VoltageReading();
+    VoltageReading(double volt, double kR, double uR);
     String ToJSON();
 };
 
